@@ -1,0 +1,70 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-1",
+      "description": "Moving truck on a highway at sunset.",
+      "imageUrl": "https://picsum.photos/seed/hero1/1920/1080",
+      "imageHint": "moving truck"
+    },
+    {
+      "id": "how-it-works-bg",
+      "description": "Illustration of a moving truck and boxes.",
+      "imageUrl": "https://picsum.photos/seed/howitworksbg/1200/800",
+      "imageHint": "moving truck"
+    },
+    {
+      "id": "gallery-1",
+      "description": "A moving team carefully loading boxes into a truck.",
+      "imageUrl": "https://picsum.photos/seed/gallery1/400/300",
+      "imageHint": "moving team"
+    },
+    {
+      "id": "gallery-2",
+      "description": "A person wrapping a fragile vase in bubble wrap.",
+      "imageUrl": "https://picsum.photos/seed/gallery2/400/300",
+      "imageHint": "packing fragile"
+    },
+    {
+      "id": "gallery-3",
+      "description": "Inside of a clean, well-organized moving truck.",
+      "imageUrl": "https://picsum.photos/seed/gallery3/400/300",
+      "imageHint": "moving truck"
+    },
+    {
+      "id": "gallery-4",
+      "description": "A team member assembling furniture in a new home.",
+      "imageUrl": "https://picsum.photos/seed/gallery4/400/300",
+      "imageHint": "assembling furniture"
+    },
+    {
+      "id": "gallery-5",
+      "description": "Secure storage units in a clean facility.",
+      "imageUrl": "https://picsum.photos/seed/gallery5/400/300",
+      "imageHint": "storage unit"
+    },
+    {
+      "id": "gallery-6",
+      "description": "A happy family in their new, unpacked living room.",
+      "imageUrl": "https://picsum.photos/seed/gallery6/400/300",
+      "imageHint": "happy family"
+    },
+    {
+      "id": "gallery-7",
+      "description": "Close-up of a mover's hands taping a box shut.",
+      "imageUrl": "https://picsum.photos/seed/gallery7/400/300",
+      "imageHint": "packing box"
+    },
+    {
+      "id": "gallery-8",
+      "description": "A branded EasyMove truck parked in a residential neighborhood.",
+      "imageUrl": "https://picsum.photos/seed/gallery8/400/300",
+      "imageHint": "company truck"
+    },
+    {
+      "id": "map-1",
+      "description": "A stylized map of Brazil showing moving routes.",
+      "imageUrl": "https://picsum.photos/seed/map1/1000/563",
+      "imageHint": "brazil map"
+    }
+  ]
+}
