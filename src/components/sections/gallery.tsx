@@ -18,18 +18,18 @@ export default function Gallery() {
         </div>
       </div>
       <div
-        className="w-max flex gap-4 animate-scroll [animation-duration:40s]"
+        className="w-max flex gap-3 sm:gap-4 animate-scroll [animation-duration:40s]"
         aria-hidden="true"
       >
         {extendedImages.map((image, index) => (
-          <div key={`${image.id}-${index}`} className="relative w-[400px] h-[300px] flex-shrink-0">
-              <Image
-                src={image.imageUrl}
-                alt={image.description}
-                fill
-                className="object-cover rounded-lg"
-                data-ai-hint={image.imageHint}
-              />
+          <div key={`${image.id}-${index}`} className="relative w-[280px] sm:w-[350px] md:w-[400px] h-[210px] sm:h-[262px] md:h-[300px] flex-shrink-0">
+            <Image
+              src={image.imageUrl}
+              alt={image.description}
+              fill
+              className="object-cover rounded-lg"
+              data-ai-hint={image.imageHint}
+            />
           </div>
         ))}
       </div>

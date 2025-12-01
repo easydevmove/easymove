@@ -29,11 +29,16 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --color-1: 211 81% 18%; /* Primary */
-    --color-2: 38 91% 55%; /* Accent */
-    --color-3: 195 20% 95%; /* Secondary */
-    --color-4: 210 40% 98%; /* Background */
-    --color-5: 211 81% 30%; /* Lighter Primary */
+    --color-1: 211 81% 18%;
+    /* Primary */
+    --color-2: 38 91% 55%;
+    /* Accent */
+    --color-3: 195 20% 95%;
+    /* Secondary */
+    --color-4: 210 40% 98%;
+    /* Background */
+    --color-5: 211 81% 30%;
+    /* Lighter Primary */
   }
 
   .dark {
@@ -63,14 +68,43 @@
   * {
     @apply border-border;
   }
+
   html {
     @apply scroll-smooth;
+    scroll-padding-top: 5rem;
+    /* Account for fixed header */
   }
+
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-headline;
+  }
+
+  /* Ensure touch targets are at least 44x44px for mobile accessibility */
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better mobile input styling */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+    /* Prevents zoom on iOS */
   }
 }
 
@@ -79,5 +113,19 @@
     to {
       transform: translate(calc(-50% - 0.5rem));
     }
+  }
+
+  /* 3D perspective utilities */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
   }
 }
