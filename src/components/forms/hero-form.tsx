@@ -51,7 +51,7 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 const steps = [
     { id: 1, title: 'Contato e Mudança', fields: ['name', 'phone', 'origin', 'destination', 'date', 'urgency'] },
     { id: 2, title: 'Equipe Necessária', fields: ['helpers_origin', 'helpers_destination', 'assemblers_origin', 'assemblers_destination', 'packers'] },
-    { id: 3, title: 'Revisão e Itens', fields: ['itemsList', 'lgpd', 'itemsImage'] },
+    { id: 3, title: 'Revisão e Itens', fields: ['itemsList', 'lgpd'] },
 ];
 
 const NumberInput = ({ value, onChange }: { value: number; onChange: (val: number) => void; }) => {
@@ -174,12 +174,9 @@ export function HeroForm() {
     const { toast } = useToast();
     const [submissionResult, setSubmissionResult] = useState<{ success: boolean; message: string; data?: any } | null>(null);
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-    const [isRecording, setIsRecording] = useState(false);
-    const [audioUrl, setAudioUrl] = useState<string | null>(null);
-    const [micError, setMicError] = useState<string | null>(null);
-    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-    const audioChunksRef = useRef<Blob[]>([]);
-    const imageInputRef = useRef<HTMLInputElement | null>(null);
+    const [isListening, setIsListening] = useState(false);
+    const recognitionRef = useRef<any>(null);
+    const initialTextRef = useRef<string>("");
 
 
     const form = useForm<MultiStepFormValues>({
@@ -198,43 +195,77 @@ export function HeroForm() {
         },
     });
 
-    const { control, setValue, clearErrors } = form;
-    const itemsImage = useWatch({ control, name: "itemsImage" });
+    const { control, setValue, clearErrors, getValues } = form;
 
-    const startRecording = async () => {
-        setMicError(null);
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorderRef.current = new MediaRecorder(stream);
-            mediaRecorderRef.current.ondataavailable = (event) => {
-                audioChunksRef.current.push(event.data);
-            };
-            mediaRecorderRef.current.onstop = () => {
-                const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-                const url = URL.createObjectURL(audioBlob);
-                setAudioUrl(url);
-                setValue('itemsAudio', audioBlob);
-                audioChunksRef.current = [];
-            };
-            mediaRecorderRef.current.start();
-            setIsRecording(true);
-        } catch (error) {
-            console.error("Error accessing microphone:", error);
-            setMicError("Não foi possível acessar o microfone. Verifique as permissões no seu navegador.");
+    const toggleListening = () => {
+        if (isListening) {
+            if (recognitionRef.current) {
+                recognitionRef.current.stop();
+            }
+            setIsListening(false);
+            return;
         }
-    };
 
-    const stopRecording = () => {
-        if (mediaRecorderRef.current) {
-            mediaRecorderRef.current.stop();
-            setIsRecording(false);
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            toast({
+                title: "Erro",
+                description: "Seu navegador não suporta reconhecimento de fala.",
+                variant: "destructive"
+            });
+            return;
         }
-    };
 
-    const deleteAudio = () => {
-        setAudioUrl(null);
-        setValue('itemsAudio', undefined);
-    }
+        const recognition = new SpeechRecognition();
+        recognitionRef.current = recognition;
+        recognition.lang = 'pt-BR';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        initialTextRef.current = getValues('itemsList') || "";
+
+        recognition.onstart = () => {
+            setIsListening(true);
+        };
+
+        recognition.onresult = (event: any) => {
+            let interimTranscript = '';
+            let finalTranscript = '';
+
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    finalTranscript += event.results[i][0].transcript;
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
+                }
+            }
+
+            const currentTranscript = finalTranscript || interimTranscript;
+            if (currentTranscript) {
+                // Append to initial text
+                // Note: This simple logic appends. For continuous editing it might be tricky, 
+                // but for "dictation" mode it works.
+                // Actually, event.results accumulates. 
+                // Let's just grab all transcripts from the session.
+                const allTranscripts = Array.from(event.results)
+                    .map((result: any) => result[0].transcript)
+                    .join('');
+
+                setValue('itemsList', (initialTextRef.current + (initialTextRef.current ? ' ' : '') + allTranscripts).slice(0, 5000));
+            }
+        };
+
+        recognition.onerror = (event: any) => {
+            console.error("Speech recognition error", event.error);
+            setIsListening(false);
+        };
+
+        recognition.onend = () => {
+            setIsListening(false);
+        };
+
+        recognition.start();
+    };
 
     type FieldName = keyof MultiStepFormValues;
 
@@ -257,8 +288,7 @@ export function HeroForm() {
 
     function onSubmit(values: MultiStepFormValues) {
         startTransition(async () => {
-            // Here you would handle the form submission, including audio and image files.
-            // For this example, we're just logging it.
+            // Here you would handle the form submission.
             const result = await submitLead(values, "hero-form");
             setSubmissionResult(result);
             if (result.success) {
@@ -288,7 +318,7 @@ export function HeroForm() {
         form.reset();
         setCurrentStep(0);
         setSubmissionResult(null);
-        setAudioUrl(null);
+        setSubmissionResult(null);
     }
 
     return (
@@ -429,61 +459,27 @@ export function HeroForm() {
                                                 <div className="relative">
                                                     <Textarea
                                                         placeholder="Ex: Geladeira, Sofá, 10 caixas..."
-                                                        className="resize-none h-24 pr-12" {...field}
+                                                        className="resize-none h-48 pr-12"
+                                                        maxLength={5000}
+                                                        {...field}
                                                     />
-                                                    <Button type="button" size="icon" variant="ghost" className="absolute top-2 right-2 h-8 w-8" onClick={isRecording ? stopRecording : startRecording}>
-                                                        {isRecording ? <StopCircle className="h-5 w-5 text-red-500" /> : <Mic className="h-5 w-5" />}
-                                                    </Button>
+                                                    <div className="absolute top-2 right-2 flex flex-col gap-1">
+                                                        <Button
+                                                            type="button"
+                                                            size="icon"
+                                                            variant={isListening ? "destructive" : "ghost"}
+                                                            className={cn("h-8 w-8", isListening && "animate-pulse")}
+                                                            onClick={toggleListening}
+                                                        >
+                                                            {isListening ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                                                        </Button>
+                                                        <span className="text-[10px] text-muted-foreground text-right pr-1">
+                                                            {field.value?.length || 0}/5000
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </FormControl>
                                             <FormMessage />
-                                        </FormItem>
-                                    )} />
-
-                                    {micError && <Alert variant="destructive"><MicOff className="h-4 w-4" /><AlertTitle>Erro no Microfone</AlertTitle><AlertDescription>{micError}</AlertDescription></Alert>}
-
-                                    {audioUrl && (
-                                        <div className="flex items-center gap-2 p-2 rounded-md border">
-                                            <audio src={audioUrl} controls className="flex-grow" />
-                                            <Button type="button" size="icon" variant="ghost" onClick={deleteAudio}>
-                                                <Trash2 className="h-5 w-5 text-destructive" />
-                                            </Button>
-                                        </div>
-                                    )}
-
-                                    <FormField control={form.control} name="itemsImage" render={({ field: { onChange }, ...field }) => (
-                                        <FormItem>
-                                            <FormLabel>Enviar imagem dos itens (opcional, max 1MB)</FormLabel>
-                                            <FormControl>
-                                                <Button type="button" variant="outline" onClick={() => imageInputRef.current?.click()} className="w-full">
-                                                    <Upload className="mr-2 h-4 w-4" />
-                                                    Selecionar Imagem
-                                                </Button>
-                                            </FormControl>
-                                            <input
-                                                type="file"
-                                                ref={imageInputRef}
-                                                className="hidden"
-                                                accept="image/png, image/jpeg, image/webp"
-                                                onChange={(e) => {
-                                                    const file = e.target.files?.[0];
-                                                    onChange(file);
-                                                }}
-                                            />
-                                            <FormMessage />
-                                            {itemsImage && (
-                                                <div className="flex items-center gap-2 p-2 rounded-md border text-sm text-muted-foreground">
-                                                    <Paperclip className="h-4 w-4" />
-                                                    <span className="truncate flex-grow">{itemsImage.name}</span>
-                                                    <Button type="button" size="icon" variant="ghost" onClick={() => {
-                                                        setValue('itemsImage', undefined);
-                                                        if (imageInputRef.current) imageInputRef.current.value = '';
-                                                        clearErrors('itemsImage');
-                                                    }}>
-                                                        <Trash2 className="h-5 w-5 text-destructive" />
-                                                    </Button>
-                                                </div>
-                                            )}
                                         </FormItem>
                                     )} />
 
