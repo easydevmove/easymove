@@ -309,8 +309,36 @@ export function HeroForm() {
 
     const getWhatsAppUrl = () => {
         if (!submissionResult?.success || !submissionResult.data) return "#";
-        const { name, origin, destination, date } = submissionResult.data;
-        const message = `Olá, sou ${name}. Gostaria de um orçamento de mudança de ${origin} para ${destination} na data aproximada de ${date}.`;
+        const data = submissionResult.data;
+
+        const urgency = data.urgency ? data.urgency.charAt(0).toUpperCase() + data.urgency.slice(1) : 'Não informada';
+
+        const message = `*Solicitação de Orçamento*
+
+Olá, gostaria de solicitar um orçamento com os detalhes abaixo:
+
+👤 *DADOS PESSOAIS*
+Nome: ${data.name}
+Telefone: ${data.phone}
+
+🚚 *DADOS DA MUDANÇA*
+Origem: ${data.origin}
+Destino: ${data.destination}
+Data: ${data.date}
+Urgência: ${urgency}
+
+👥 *EQUIPE NECESSÁRIA*
+Ajudantes (Origem): ${data.helpers_origin || 0}
+Ajudantes (Destino): ${data.helpers_destination || 0}
+Montadores (Origem): ${data.assemblers_origin || 0}
+Montadores (Destino): ${data.assemblers_destination || 0}
+Embaladores: ${data.packers || 0}
+
+📦 *LISTA DE ITENS*
+${data.itemsList || 'Nenhum item listado'}
+
+--------------------------------`;
+
         return `${WHATSAPP_MESSAGE_BASE}${encodeURIComponent(message)}`;
     };
 

@@ -44,7 +44,7 @@ export async function submitLead(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...leadData, createdAt: new Date().toISOString() }),
       }).catch(webhookError => {
-         console.warn("Failed to send lead to N8N webhook:", webhookError);
+        console.warn("Failed to send lead to N8N webhook:", webhookError);
       });
     }
 
@@ -52,9 +52,7 @@ export async function submitLead(
       success: true,
       message: "Orçamento solicitado com sucesso!",
       data: {
-        name: data.name,
-        origin: data.origin,
-        destination: data.destination,
+        ...data,
         date: format(data.date, "dd/MM/yyyy"),
       },
     };
