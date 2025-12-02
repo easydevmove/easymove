@@ -286,6 +286,36 @@ export function HeroForm() {
         }
     };
 
+    const generateWhatsAppUrl = (data: any) => {
+        const urgency = data.urgency ? data.urgency.charAt(0).toUpperCase() + data.urgency.slice(1) : 'Não informada';
+
+        const message = ` --- NOVO PEDIDO DE ORÇAMENTO EASYMOVE---
+
+--------------------
+
+📌 Detalhes do Pedido
+- Nome: ${data.name}
+- Origem: ${data.origin}
+- Destino: ${data.destination}
+- Data do Serviço: ${data.date}
+- Urgência: ${urgency}
+
+--------------------
+
+🛠️ Serviços Adicionais
+- Ajudantes: Origem: ${data.helpers_origin || 0} | Destino: ${data.helpers_destination || 0}
+- Montadores: Origem: ${data.assemblers_origin || 0} | Destino: ${data.assemblers_destination || 0}
+- Embaladores: ${data.packers || 0}
+
+--------------------
+
+📦 Itens a Transportar
+${data.itemsList || 'Nenhum item listado'}
+--------------------`;
+
+        return `${WHATSAPP_MESSAGE_BASE}${encodeURIComponent(message)}`;
+    };
+
     function onSubmit(values: MultiStepFormValues) {
         startTransition(async () => {
             // Here you would handle the form submission.
@@ -294,8 +324,13 @@ export function HeroForm() {
             if (result.success) {
                 toast({
                     title: "Sucesso!",
-                    description: "Seu pedido de orçamento foi enviado. Entraremos em contato em breve.",
+                    description: "Seu pedido de orçamento foi enviado. Redirecionando para o WhatsApp...",
                 });
+
+                // Auto-open WhatsApp
+                const url = generateWhatsAppUrl(result.data);
+                window.open(url, '_blank');
+
                 // Don't reset form, so user can see success state
             } else {
                 toast({
@@ -307,39 +342,11 @@ export function HeroForm() {
         });
     }
 
+
+
     const getWhatsAppUrl = () => {
         if (!submissionResult?.success || !submissionResult.data) return "#";
-        const data = submissionResult.data;
-
-        const urgency = data.urgency ? data.urgency.charAt(0).toUpperCase() + data.urgency.slice(1) : 'Não informada';
-
-        const message = `*Solicitação de Orçamento*
-
-Olá, gostaria de solicitar um orçamento com os detalhes abaixo:
-
-👤 *DADOS PESSOAIS*
-Nome: ${data.name}
-Telefone: ${data.phone}
-
-🚚 *DADOS DA MUDANÇA*
-Origem: ${data.origin}
-Destino: ${data.destination}
-Data: ${data.date}
-Urgência: ${urgency}
-
-👥 *EQUIPE NECESSÁRIA*
-Ajudantes (Origem): ${data.helpers_origin || 0}
-Ajudantes (Destino): ${data.helpers_destination || 0}
-Montadores (Origem): ${data.assemblers_origin || 0}
-Montadores (Destino): ${data.assemblers_destination || 0}
-Embaladores: ${data.packers || 0}
-
-📦 *LISTA DE ITENS*
-${data.itemsList || 'Nenhum item listado'}
-
---------------------------------`;
-
-        return `${WHATSAPP_MESSAGE_BASE}${encodeURIComponent(message)}`;
+        return generateWhatsAppUrl(submissionResult.data);
     };
 
     const resetForm = () => {
