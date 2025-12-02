@@ -186,10 +186,10 @@ export function HeroForm() {
             phone: "",
             origin: "",
             destination: "",
-            helpers_origin: 1,
-            helpers_destination: 1,
-            assemblers_origin: 1,
-            assemblers_destination: 1,
+            helpers_origin: 0,
+            helpers_destination: 0,
+            assemblers_origin: 0,
+            assemblers_destination: 0,
             packers: 0,
             itemsList: "",
         },
@@ -289,11 +289,11 @@ export function HeroForm() {
     const generateWhatsAppUrl = (data: any) => {
         const urgency = data.urgency ? data.urgency.charAt(0).toUpperCase() + data.urgency.slice(1) : 'Não informada';
 
-        const message = ` --- NOVO PEDIDO DE ORÇAMENTO EASYMOVE---
+        const message = ` --- NOVO PEDIDO DE ORCAMENTO EASYMOVE---
 
 --------------------
 
-📌 Detalhes do Pedido
+DETALHES DO PEDIDO
 - Nome: ${data.name}
 - Origem: ${data.origin}
 - Destino: ${data.destination}
@@ -302,14 +302,14 @@ export function HeroForm() {
 
 --------------------
 
-🛠️ Serviços Adicionais
+SERVICOS ADICIONAIS
 - Ajudantes: Origem: ${data.helpers_origin || 0} | Destino: ${data.helpers_destination || 0}
 - Montadores: Origem: ${data.assemblers_origin || 0} | Destino: ${data.assemblers_destination || 0}
 - Embaladores: ${data.packers || 0}
 
 --------------------
 
-📦 Itens a Transportar
+ITENS A TRANSPORTAR
 ${data.itemsList || 'Nenhum item listado'}
 --------------------`;
 
