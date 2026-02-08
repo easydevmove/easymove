@@ -19,7 +19,9 @@ export default function Insurance() {
               Analisamos sua necessidade para oferecer a melhor solução com o melhor custo-benefício.
             </p>
             <RainbowButton asChild>
-              <Link href="/orcamento">Receber meu orçamento rápido</Link>
+              <Link href="/orcamento" className="flex h-full w-full items-center justify-center text-center">
+                Receber meu orçamento rápido
+              </Link>
             </RainbowButton>
           </div>
         </div>

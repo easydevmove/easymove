@@ -32,14 +32,14 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm shadow-sm">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+      <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6 md:grid md:grid-cols-[auto_1fr_auto] md:items-center">
         <Link href="/" className="flex items-center gap-2" aria-label="EasyMove Home">
           <Logo className="h-8 w-8 text-primary" />
           <span className="hidden sm:inline text-xl font-bold text-primary font-headline">EasyMove</span>
         </Link>
         
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center justify-center gap-6">
           {navItems.map((item) => (
             <Link
               key={item.label}
@@ -50,14 +50,14 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden md:flex items-center justify-end gap-2">
            <Button variant="ghost" size="icon" asChild>
             <a href={`${WHATSAPP_MESSAGE_BASE}Olá! Gostaria de pedir um orçamento.`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
               <Phone className="h-5 w-5 text-primary"/>
             </a>
           </Button>
           <RainbowButton asChild>
-            <Link href="/orcamento">Pedir orçamento</Link>
+            <Link href="/orcamento" className="flex h-full w-full items-center justify-center text-center">Pedir orçamento</Link>
           </RainbowButton>
         </div>
 
@@ -77,7 +77,7 @@ export default function Header() {
                   <span>EasyMove</span>
                 </SheetTitle>
               </SheetHeader>
-              <div className="mt-8 flex flex-col gap-4">
+              <div className="mt-8 flex flex-col items-center gap-4 text-center">
                 {navItems.map((item) => (
                   <Link
                     key={item.label}
@@ -95,7 +95,7 @@ export default function Header() {
                     </a>
                 </Button>
                 <RainbowButton asChild>
-                  <Link href="/orcamento">Pedir orçamento</Link>
+                  <Link href="/orcamento" className="flex h-full w-full items-center justify-center text-center">Pedir orçamento</Link>
                 </RainbowButton>
               </div>
             </SheetContent>

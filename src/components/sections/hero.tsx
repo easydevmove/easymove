@@ -1,5 +1,3 @@
-import { HeroForm } from '@/components/forms/hero-form';
-import { FilePenLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { WHATSAPP_MESSAGE_BASE } from '@/lib/constants';
 import Image from 'next/image';
@@ -40,14 +38,21 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="flex flex-col items-center justify-center mt-4 md:mt-0">
+          <div className="flex flex-col items-center justify-center mt-4 md:mt-0 w-full">
             <div className="w-full max-w-lg">
-              <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-primary-foreground bg-accent p-3 rounded-t-lg text-center flex items-center justify-center gap-2">
-                <FilePenLine className="h-5 w-5 sm:h-6 sm:w-6" />
-                <span>Peça seu orçamento rapidamente</span>
-              </h2>
+              <div className="rounded-xl overflow-hidden shadow-lg shadow-black/10">
+                <div className="bg-accent px-4 py-3">
+                  <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-primary-foreground text-center">
+                    Faça seu orçamento abaixo:
+                  </h2>
+                </div>
+                <iframe
+                  src="https://typebot.co/my-typebot-56svpgh"
+                  style={{ border: 'none', width: '100%', height: 600, borderRadius: 0, display: 'block' }}
+                  title="Peça orçamento"
+                />
+              </div>
             </div>
-            <HeroForm />
           </div>
         </div>
       </div>
