@@ -39,18 +39,18 @@ export default function Header() {
         </Link>
         
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center justify-center gap-6">
+        <nav className="hidden md:flex items-center justify-center gap-6 md:self-center">
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={getLink(item.href)}
-              className="text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
+              className="flex items-center text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="hidden md:flex items-center justify-end gap-2">
+        <div className="hidden md:flex items-center justify-end gap-2 md:self-center">
            <Button variant="ghost" size="icon" asChild>
             <a href={`${WHATSAPP_MESSAGE_BASE}Olá! Gostaria de pedir um orçamento.`} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
               <Phone className="h-5 w-5 text-primary"/>
