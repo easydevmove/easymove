@@ -4,6 +4,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export const navItems: NavItem[] = [
   { label: 'Início', href: '/' },
+  { label: 'Portfólio', href: '/portifolio' },
   { label: 'Serviços', href: '/#servicos' },
   { label: 'Como funciona', href: '/#como-funciona' },
   { label: 'Depoimentos', href: '/#depoimentos' },
